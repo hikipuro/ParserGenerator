@@ -12,9 +12,8 @@ namespace Hikipuro.Text.Parser.EBNF.Generator {
 		/// </summary>
 		/// <param name="context">コンテキストオブジェクト.</param>
 		public override void Interpret(GeneratorContext context) {
-			if (DebugFlag) {
-				Debug.WriteLine("LoopExpression.Interpret(): " + Name + ", " + Expressions.Count);
-			}
+			DebugLog("LoopExpression.Interpret(): " + Name + ", " + Expressions.Count);
+
 			Matches = new GeneratorTokenMatches(Name);
 			IsMatch = false;
 
@@ -24,9 +23,7 @@ namespace Hikipuro.Text.Parser.EBNF.Generator {
 				GeneratorExpression exp2 = null;
 				foreach (GeneratorExpression exp in Expressions) {
 					exp2 = exp;
-					if (DebugFlag) {
-						Debug.WriteLine("LoopExpression.Expressions : (" + exp.Name + ")");
-					}
+					DebugLog("LoopExpression.Expressions : (" + exp.Name + ")");
 					exp.Interpret(context);
 					IsMatch = exp.IsMatch;
 					if (exp.IsMatch == false) {

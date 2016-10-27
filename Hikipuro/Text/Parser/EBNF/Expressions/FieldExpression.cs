@@ -4,20 +4,23 @@ using System.Diagnostics;
 using TokenType = Hikipuro.Text.Parser.EBNF.EBNFParser.TokenType;
 
 namespace Hikipuro.Text.Parser.EBNF.Expressions {
+	/// <summary>
+	/// EBNF の 1 つの項目を表すクラス.
+	/// </summary>
 	class FieldExpression : BaseExpression {
 		/// <summary>
 		/// 評価用メソッド.
 		/// </summary>
 		/// <param name="context">コンテキストオブジェクト.</param>
 		public override void Interpret(EBNFContext context) {
-			Debug.WriteLine(": FieldExpression.Interpret()");
+			DebugLog(": FieldExpression.Interpret()");
 
 			// 名前
 			Token<TokenType> token = context.Current;
 			CheckTokenExists(token);
 			CheckTokenType(token, TokenType.Name);
 			if (token.Text == string.Empty) {
-				ThrowInterpretException(
+				ThrowParseException(
 					ErrorMessages.UnexpectedToken, token
 				);
 			}

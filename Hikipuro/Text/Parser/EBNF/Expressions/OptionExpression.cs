@@ -4,56 +4,46 @@ using System.Diagnostics;
 using TokenType = Hikipuro.Text.Parser.EBNF.EBNFParser.TokenType;
 
 namespace Hikipuro.Text.Parser.EBNF.Expressions {
+	/// <summary>
+	/// EBNF のオプション.
+	/// </summary>
 	class OptionExpression : BaseExpression {
 		/// <summary>
 		/// 評価用メソッド.
 		/// </summary>
 		/// <param name="context">コンテキストオブジェクト.</param>
 		public override void Interpret(EBNFContext context) {
-			Debug.WriteLine(": OptionExpression.Interpret()");
+			DebugLog(": OptionExpression.Interpret()");
 
+			// 戻り値の準備
 			Generator = GeneratorExpression.CreateOption();
 
+			// 最初のトークンをチェック
 			Token<TokenType> token = context.Current;
-			bool loop = true;
+			CheckTokenExists(token);
+			CheckFirstToken(token);
 
+			bool loop = true;
 			while (loop) {
-				//Debug.WriteLine("OptionExpression: " + token.Text);
+				DebugLog(": OptionExpression: (" + token.Text + ")");
+
 				switch (token.Type) {
 				case TokenType.String:
-					if (token.Next != null && token.Next.Type == TokenType.Or) {
-						OrExpression exp = new OrExpression();
-						exp.Interpret(context);
-						Generator.AddExpression(exp.Generator);
+				case TokenType.Name:
+					Token<TokenType> nextToken = token.Next;
+					if (nextToken != null && nextToken.Type == TokenType.Or) {
+						ParseOr(context);
 						token = context.Current;
-					} else {
-						StringExpression exp = new StringExpression();
-						exp.Interpret(context);
-						Generator.AddExpression(exp.Generator);
-						token = context.Next();
-						Debug.WriteLine("Test: " + exp.Generator.Name);
+						CheckTokenExists(token);
 					}
 					break;
-				case TokenType.Name: {
-						if (token.Next != null && token.Next.Type == TokenType.Or) {
-							OrExpression exp = new OrExpression();
-							exp.Interpret(context);
-							Generator.AddExpression(exp.Generator);
-							token = context.Current;
-						} else {
-							GeneratorExpression exp = GeneratorExpression.CreateNonterminal(token.Text);
-							Generator.AddExpression(exp);
-							token = context.Next();
-						}
-					}
+				}
+				if (token.IsLast) {
+					ThrowParseException(ErrorMessages.UnexpectedToken, token);
 					break;
-				case TokenType.OpenBrace: {
-						LoopExpression exp = new LoopExpression();
-						exp.Interpret(context);
-						Generator.AddExpression(exp.Generator);
-						token = context.Current;
-					}
-					break;
+				}
+
+				switch (token.Type) {
 				case TokenType.OpenBracket:
 					token = context.Next();
 					break;
@@ -61,15 +51,39 @@ namespace Hikipuro.Text.Parser.EBNF.Expressions {
 					loop = false;
 					token = context.Next();
 					break;
+				case TokenType.String:
+					ParseTerminal(context);
+					token = context.Next();
+					break;
+				case TokenType.Name:
+					ParseNonterminal(context, token.Text);
+					token = context.Next();
+					break;
+				case TokenType.OpenBrace:
+					ParseLoop(context);
+					token = context.Current;
+					break;
 				default:
-					ThrowInterpretException(ErrorMessages.UnexpectedToken, token);
+					ThrowParseException(ErrorMessages.UnexpectedToken, token);
 					break;
 				}
-				if (loop == false) {
+
+				CheckTokenExists(token);
+				if (token.IsLast) {
+					ThrowParseException(ErrorMessages.UnexpectedToken, token);
 					break;
 				}
-				//token = context.Next();
 			}
+		}
+
+		/// <summary>
+		/// 最初のトークンをチェックする.
+		/// </summary>
+		/// <param name="token">トークン.</param>
+		private void CheckFirstToken(Token<TokenType> token) {
+			CheckTokenType(token, new TokenType[] {
+				TokenType.OpenBracket
+			});
 		}
 	}
 }

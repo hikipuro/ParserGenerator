@@ -14,7 +14,7 @@ namespace Hikipuro.Text.Parser.EBNF.Expressions {
 		/// </summary>
 		/// <param name="context">コンテキストオブジェクト.</param>
 		public override void Interpret(EBNFContext context) {
-			Debug.WriteLine(": NameExpression.Interpret()");
+			DebugLog(": NameExpression.Interpret()");
 
 			Token<TokenType> token = context.Current;
 			bool loop = true;
@@ -32,7 +32,7 @@ namespace Hikipuro.Text.Parser.EBNF.Expressions {
 					loop = false;
 					break;
 				default:
-					ThrowInterpretException(ErrorMessages.UnexpectedToken, token);
+					ThrowParseException(ErrorMessages.UnexpectedToken, token);
 					break;
 				}
 				if (loop == false) {
@@ -41,7 +41,7 @@ namespace Hikipuro.Text.Parser.EBNF.Expressions {
 				token = context.Next();
 			}
 			Name = Name.TrimEnd();
-			Debug.WriteLine(": NameExpression: (" + Name + ")");
+			DebugLog(": NameExpression: (" + Name + ")");
 		}
 	}
 }

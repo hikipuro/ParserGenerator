@@ -1,5 +1,6 @@
 ﻿using Hikipuro.Text.Interpreter;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Text;
 
 namespace Hikipuro.Text.Parser.EBNF.Generator {
@@ -7,6 +8,10 @@ namespace Hikipuro.Text.Parser.EBNF.Generator {
 	/// ベースクラス.
 	/// </summary>
 	public class GeneratorExpression : Expression<GeneratorContext> {
+		/// <summary>
+		/// デバッグ用.
+		/// true で処理中にデバッグメッセージを表示する.
+		/// </summary>
 		public bool DebugFlag = true;
 
 		public GeneratorExpressionType Type = GeneratorExpressionType.Nonterminal;
@@ -29,6 +34,18 @@ namespace Hikipuro.Text.Parser.EBNF.Generator {
 		/// </summary>
 		public GeneratorExpression() {
 			Expressions = new List<GeneratorExpression>();
+		}
+
+		/// <summary>
+		/// デバッグ用.
+		/// DebugFlag が true の時のみメッセージを表示する.
+		/// </summary>
+		/// <param name="text">表示するメッセージ.</param>
+		public void DebugLog(string text) {
+			if (DebugFlag == false) {
+				return;
+			}
+			Debug.WriteLine(text);
 		}
 
 		public new string ToString() {

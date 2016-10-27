@@ -10,9 +10,8 @@ namespace Hikipuro.Text.Parser.EBNF.Generator {
 		/// </summary>
 		/// <param name="context">コンテキストオブジェクト.</param>
 		public override void Interpret(GeneratorContext context) {
-			if (DebugFlag) {
-				Debug.WriteLine("OrExpression.Interpret(): " + Name + ", " + Expressions.Count);
-			}
+			DebugLog("OrExpression.Interpret(): " + Name + ", " + Expressions.Count);
+
 			Matches = new GeneratorTokenMatches(Name);
 			IsMatch = false;
 

@@ -11,9 +11,8 @@ namespace Hikipuro.Text.Parser.EBNF.Generator {
 		/// </summary>
 		/// <param name="context">コンテキストオブジェクト.</param>
 		public override void Interpret(GeneratorContext context) {
-			if (DebugFlag) {
-				Debug.WriteLine("NonterminalExpression.Interpret(): " + Name);
-			}
+			DebugLog("NonterminalExpression.Interpret(): " + Name);
+
 			Matches = new GeneratorTokenMatches(Name);
 			IsMatch = false;
 

@@ -21,14 +21,12 @@ namespace Hikipuro.Text.Parser.EBNF.Generator {
 				Matches.AddToken(token);
 				context.Next();
 			}
-			if (DebugFlag) {
-				Debug.WriteLine(string.Format(
-					"TerminalExpression.Interpret(): {0} = {1}, {2}",
-					token.Type.Name,
-					Name,
-					IsMatch
-				));
-			}
+			DebugLog(string.Format(
+				"TerminalExpression.Interpret(): {0} = {1}, {2}",
+				token.Type.Name,
+				Name,
+				IsMatch
+			));
 
 			//Matches = matches;
 		}

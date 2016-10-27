@@ -14,9 +14,7 @@ namespace Hikipuro.Text.Parser.EBNF.Generator {
 		public override void Interpret(GeneratorContext context) {
 			IsMatch = false;
 			foreach (GeneratorExpression exp in Expressions) {
-				if (DebugFlag) {
-					Debug.WriteLine("RootExpression.Expressions : (" + exp.Name + ")");
-				}
+				DebugLog("RootExpression.Expressions : (" + exp.Name + ")");
 				exp.Interpret(context);
 				if (exp.IsMatch) {
 					IsMatch = true;

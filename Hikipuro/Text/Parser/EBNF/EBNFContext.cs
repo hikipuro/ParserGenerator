@@ -11,22 +11,34 @@ namespace Hikipuro.Text.Parser.EBNF {
 	/// </summary>
 	public class EBNFContext : Context<Token<TokenType>> {
 		/// <summary>
-		/// 
+		/// 生成された Tokenizer.
 		/// </summary>
-		public Tokenizer<GeneratorTokenType> Tokenizer = new Tokenizer<GeneratorTokenType>();
+		public Tokenizer<GeneratorTokenType> Tokenizer;
+
+		/// <summary>
+		/// 生成されたパーサのルート.
+		/// </summary>
 		public GeneratorRootExpression Root;
+
+		/// <summary>
+		/// 生成された Expression のリスト.
+		/// </summary>
 		public Dictionary<string, GeneratorExpression> Fields;
-		//public List<string> Tokens;
 
 		/// <summary>
 		/// コンストラクタ.
 		/// </summary>
 		/// <param name="source"></param>
 		public EBNFContext(IEnumerator source) : base(source) {
+			Tokenizer = new Tokenizer<GeneratorTokenType>();
 			Fields = new Dictionary<string, GeneratorExpression>();
-			//Tokens = new List<string>();
 		}
 
+		/// <summary>
+		/// Tokenizer に分解パターンを追加する.
+		/// </summary>
+		/// <param name="name">パターンの名前.</param>
+		/// <param name="patternText">正規表現のパターン.</param>
 		public void AddTokenizerPattern(string name, string patternText) {
 			Tokenizer.AddPattern(new GeneratorTokenType(name), patternText);
 		}

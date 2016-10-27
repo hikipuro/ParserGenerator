@@ -4,70 +4,70 @@ using System.Diagnostics;
 using TokenType = Hikipuro.Text.Parser.EBNF.EBNFParser.TokenType;
 
 namespace Hikipuro.Text.Parser.EBNF.Expressions {
+	/// <summary>
+	/// EBNF の OR.
+	/// </summary>
 	class OrExpression : BaseExpression {
-		public string Pattern = string.Empty;
-
 		/// <summary>
 		/// 評価用メソッド.
 		/// </summary>
 		/// <param name="context">コンテキストオブジェクト.</param>
 		public override void Interpret(EBNFContext context) {
-			Debug.WriteLine(": OrExpression.Interpret()");
+			DebugLog(": OrExpression.Interpret()");
 
+			// 戻り値の準備
+			string pattern = string.Empty;
 			Generator = GeneratorExpression.CreateOr();
 
+			// 最初のトークンをチェック
 			Token<TokenType> token = context.Current;
 			CheckTokenExists(token);
+			CheckFirstToken(token);
 
 			bool loop = true;
 			while (loop) {
-				Debug.WriteLine(": OrExpression.loop: " + token.Type);
+				DebugLog(": OrExpression: (" + token.Type + ")");
+
 				switch (token.Type) {
-				case TokenType.String: {
-						Pattern += token.Text;
-						StringExpression exp = new StringExpression();
-						exp.Interpret(context);
-						Generator.AddExpression(exp.Generator);
-					}
+				case TokenType.String:
+					pattern += token.Text;
+					ParseTerminal(context);
+					token = context.Next();
 					break;
-				case TokenType.Name: {
-						Pattern += token.Text;
-						GeneratorExpression exp = GeneratorExpression.CreateNonterminal(token.Text);
-						Generator.AddExpression(exp);
-					}
+				case TokenType.Name:
+					pattern += token.Text;
+					ParseNonterminal(context, token.Text);
+					token = context.Next();
 					break;
 				case TokenType.Or:
-					Pattern += "|";
+					pattern += "|";
+					token = context.Next();
 					break;
 				default:
 					loop = false;
-					//throw new InterpreterException("OrExpression.Interpret() Error");
+					//ThrowParseException(ErrorMessages.UnexpectedToken, token);
 					break;
 				}
 
-				if (token.Next == null) {
+				CheckTokenExists(token);
+				if (token.IsLast) {
 					break;
-				}
-
-				if (loop) {
-					token = context.Next();
-					if (token == null) {
-						loop = false;
-					}
 				}
 			}
 
-			Generator.Name = Pattern;
-			Debug.WriteLine(": OrExpression.Pattern: " + Pattern);
-			//Debug.WriteLine("OrExpression.token.Type: " + token.Type);
+			// 戻り値
+			Generator.Name = pattern;
+			DebugLog(": OrExpression.Pattern: " + pattern);
 		}
 
+		/// <summary>
+		/// 最初のトークンをチェックする.
+		/// </summary>
+		/// <param name="token">トークン.</param>
 		private void CheckFirstToken(Token<TokenType> token) {
 			CheckTokenType(token, new TokenType[] {
 				TokenType.String,
-				TokenType.Name,
-				TokenType.OpenBrace,
-				TokenType.OpenBracket
+				TokenType.Name
 			});
 		}
 	}
