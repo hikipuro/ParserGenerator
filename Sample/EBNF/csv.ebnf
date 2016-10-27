@@ -1,0 +1,7 @@
+csv = {record, newline};
+record = value, [{comma, value}];
+value = number | string;
+comma = ',';
+number = '\\d+[.]?\\d*';
+string = '""((?<=\\)""|[^\r\n""])*""';
+newline = '\\r\\n|\\r|\\n';

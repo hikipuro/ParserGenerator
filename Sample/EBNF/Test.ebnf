@@ -1,0 +1,3 @@
+number = {digit excluding zero | n};
+digit excluding zero = '1' | '2';
+n= '\d';
