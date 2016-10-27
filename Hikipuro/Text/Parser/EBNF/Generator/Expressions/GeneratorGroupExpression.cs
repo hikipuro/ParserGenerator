@@ -3,15 +3,15 @@ using Hikipuro.Text.Tokenizer;
 
 namespace Hikipuro.Text.Parser.EBNF.Generator {
 	/// <summary>
-	/// ループの処理用.
+	/// グループの処理用.
 	/// </summary>
-	class GeneratorLoopExpression : GeneratorExpression {
+	class GeneratorGroupExpression : GeneratorExpression {
 		/// <summary>
 		/// 評価用メソッド.
 		/// </summary>
 		/// <param name="context">コンテキストオブジェクト.</param>
 		public override void Interpret(GeneratorContext context) {
-			DebugLog("LoopExpression.Interpret(): " + Name + ", " + Expressions.Count);
+			DebugLog("GroupExpression.Interpret(): " + Name + ", " + Expressions.Count);
 
 			Matches = new GeneratorTokenMatches(Name);
 			IsMatch = false;
@@ -22,7 +22,7 @@ namespace Hikipuro.Text.Parser.EBNF.Generator {
 				GeneratorExpression exp2 = null;
 				foreach (GeneratorExpression exp in Expressions) {
 					exp2 = exp;
-					DebugLog("LoopExpression.Expressions : (" + exp.Name + ")");
+					DebugLog("GroupExpression.Expressions : (" + exp.Name + ")");
 					exp.Interpret(context);
 					IsMatch = exp.IsMatch;
 					if (exp.IsMatch == false) {
@@ -49,8 +49,6 @@ namespace Hikipuro.Text.Parser.EBNF.Generator {
 					break;
 				}
 			}
-
-			//Matches = matches;
 		}
 	}
 }

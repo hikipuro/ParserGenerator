@@ -1,18 +1,22 @@
-﻿using Hikipuro.Text.Tokenizer;
+﻿using Hikipuro.Text.Parser.EBNF.Generator;
+using Hikipuro.Text.Tokenizer;
 using TokenType = Hikipuro.Text.Parser.EBNF.EBNFParser.TokenType;
 
 namespace Hikipuro.Text.Parser.EBNF.Expressions {
 	/// <summary>
-	/// 式の右辺.
+	/// EBNF のグループ処理用.
 	/// </summary>
-	class RightExpression : BaseExpression {
-
+	class GroupExpression : BaseExpression {
 		/// <summary>
 		/// 評価用メソッド.
 		/// </summary>
 		/// <param name="context">コンテキストオブジェクト.</param>
 		public override void Interpret(EBNFContext context) {
-			DebugLog(": RightExpression.Interpret()");
+			DebugLog(": GroupExpression.Interpret()");
+
+			// 戻り値の準備
+			string pattern = string.Empty;
+			Generator = GeneratorExpression.CreateGroup();
 
 			// 最初のトークンをチェック
 			Token<TokenType> token = context.Current;
@@ -21,7 +25,7 @@ namespace Hikipuro.Text.Parser.EBNF.Expressions {
 
 			bool loop = true;
 			while (loop) {
-				DebugLog(": RightExpression: (" + token.Type + ")");
+				DebugLog(": GroupExpression: (" + token.Type + ")");
 
 				switch (token.Type) {
 				case TokenType.String:
@@ -40,32 +44,28 @@ namespace Hikipuro.Text.Parser.EBNF.Expressions {
 				}
 
 				switch (token.Type) {
+				case TokenType.OpenParen:
+					pattern += token.Text;
+					token = context.Next();
+					break;
+				case TokenType.CloseParen:
+					pattern += token.Text;
+					loop = false;
+					token = context.Next();
+					break;
 				case TokenType.String:
+					pattern += token.Text;
 					ParseTerminal(context);
 					token = context.Next();
 					break;
 				case TokenType.Name:
+					pattern += token.Text;
 					ParseNonterminal(context, token.Text);
 					token = context.Next();
-					break;
-				case TokenType.OpenParen:
-					ParseGroup(context);
-					token = context.Current;
-					break;
-				case TokenType.OpenBrace:
-					ParseLoop(context);
-					token = context.Current;
-					break;
-				case TokenType.OpenBracket:
-					ParseOption(context);
-					token = context.Current;
 					break;
 				case TokenType.Comma:
 					CheckComma(token);
 					token = context.Next();
-					break;
-				case TokenType.Semicolon:
-					loop = false;
 					break;
 				default:
 					ThrowParseException(ErrorMessages.UnexpectedToken, token);
@@ -74,9 +74,14 @@ namespace Hikipuro.Text.Parser.EBNF.Expressions {
 
 				CheckTokenExists(token);
 				if (token.IsLast) {
+					ThrowParseException(ErrorMessages.UnexpectedToken, token);
 					break;
 				}
 			}
+
+			// 戻り値
+			Generator.Name = pattern;
+			DebugLog(": GroupExpression.Pattern: " + pattern);
 		}
 
 		/// <summary>
@@ -85,11 +90,7 @@ namespace Hikipuro.Text.Parser.EBNF.Expressions {
 		/// <param name="token">トークン.</param>
 		private void CheckFirstToken(Token<TokenType> token) {
 			CheckTokenType(token, new TokenType[] {
-				TokenType.String,
-				TokenType.Name,
-				TokenType.OpenParen,
-				TokenType.OpenBrace,
-				TokenType.OpenBracket
+				TokenType.OpenParen
 			});
 		}
 	}

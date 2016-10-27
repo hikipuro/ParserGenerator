@@ -1,5 +1,4 @@
 ﻿using Hikipuro.Text.Parser.EBNF.Generator;
-using System.Diagnostics;
 
 namespace Hikipuro.Text.Parser.EBNF.Expressions {
 	/// <summary>

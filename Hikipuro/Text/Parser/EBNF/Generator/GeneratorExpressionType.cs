@@ -8,6 +8,7 @@
 		Or,
 		Loop,
 		Option,
+		Group,
 		Field,
 		Root,
 	}

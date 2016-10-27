@@ -138,6 +138,16 @@ namespace Hikipuro.Text.Parser.EBNF.Expressions {
 		}
 
 		/// <summary>
+		/// GroupExpression の処理を実行する.
+		/// </summary>
+		/// <param name="context"></param>
+		public void ParseGroup(EBNFContext context) {
+			GroupExpression exp = new GroupExpression();
+			exp.Interpret(context);
+			Generator.AddExpression(exp.Generator);
+		}
+
+		/// <summary>
 		/// LoopExpression の処理を実行する.
 		/// </summary>
 		/// <param name="context"></param>

@@ -115,6 +115,11 @@ namespace Hikipuro.Text.Parser.EBNF.Generator {
 			exp.Type = GeneratorExpressionType.Loop;
 			return exp;
 		}
+		public static GeneratorExpression CreateGroup() {
+			GeneratorGroupExpression exp = new GeneratorGroupExpression();
+			exp.Type = GeneratorExpressionType.Group;
+			return exp;
+		}
 
 		public void AddExpression(GeneratorExpression exp) {
 			Expressions.Add(exp);

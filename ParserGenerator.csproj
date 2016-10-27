@@ -42,6 +42,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Hikipuro\Text\Parser\EBNF\Expressions\GroupExpression.cs" />
+    <Compile Include="Hikipuro\Text\Parser\EBNF\Generator\Expressions\GeneratorGroupExpression.cs" />
     <Compile Include="Sample\Form1.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -70,7 +72,6 @@
     <Compile Include="Hikipuro\Text\Parser\EBNF\Expressions\ErrorMessages.cs" />
     <Compile Include="Hikipuro\Text\Parser\EBNF\Expressions\FieldExpression.cs" />
     <Compile Include="Hikipuro\Text\Parser\EBNF\Expressions\LoopExpression.cs" />
-    <Compile Include="Hikipuro\Text\Parser\EBNF\Expressions\NameExpression.cs" />
     <Compile Include="Hikipuro\Text\Parser\EBNF\Expressions\OptionExpression.cs" />
     <Compile Include="Hikipuro\Text\Parser\EBNF\Expressions\OrExpression.cs" />
     <Compile Include="Hikipuro\Text\Parser\EBNF\Expressions\RightExpression.cs" />

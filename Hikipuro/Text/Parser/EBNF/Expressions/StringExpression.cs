@@ -1,6 +1,5 @@
 ﻿using Hikipuro.Text.Parser.EBNF.Generator;
 using Hikipuro.Text.Tokenizer;
-using System.Diagnostics;
 using TokenType = Hikipuro.Text.Parser.EBNF.EBNFParser.TokenType;
 
 namespace Hikipuro.Text.Parser.EBNF.Expressions {
