@@ -42,10 +42,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Form1.cs">
+    <Compile Include="Sample\Form1.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Form1.Designer.cs">
+    <Compile Include="Sample\Form1.Designer.cs">
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
     <Compile Include="Hikipuro\Text\Interpreter\Context.cs" />
@@ -87,9 +87,9 @@
     <Compile Include="Hikipuro\Text\Tokenizer\TokenMatch.cs" />
     <Compile Include="Hikipuro\Text\Tokenizer\TokenPattern.cs" />
     <Compile Include="Hikipuro\Text\Tokenizer\TokenTypeGroup.cs" />
-    <Compile Include="Program.cs" />
+    <Compile Include="Sample\Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <EmbeddedResource Include="Form1.resx">
+    <EmbeddedResource Include="Sample\Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
