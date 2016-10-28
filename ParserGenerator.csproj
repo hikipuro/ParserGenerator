@@ -42,8 +42,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Hikipuro\Text\Parser\EBNF\Expressions\ExceptionExpression.cs" />
     <Compile Include="Hikipuro\Text\Parser\EBNF\Expressions\GroupExpression.cs" />
-    <Compile Include="Hikipuro\Text\Parser\EBNF\Generator\Expressions\GeneratorGroupExpression.cs" />
+    <Compile Include="Hikipuro\Text\Parser\Generator\ExpressionFactory.cs" />
+    <Compile Include="Hikipuro\Text\Parser\Generator\Expressions\ExceptionExpression.cs" />
+    <Compile Include="Hikipuro\Text\Parser\Generator\Expressions\GroupExpression.cs" />
     <Compile Include="Sample\Form1.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -53,18 +56,16 @@
     <Compile Include="Hikipuro\Text\Interpreter\Context.cs" />
     <Compile Include="Hikipuro\Text\Interpreter\Expression.cs" />
     <Compile Include="Hikipuro\Text\Interpreter\InterpreterException.cs" />
-    <Compile Include="Hikipuro\Text\Parser\EBNF\Generator\GeneratorContext.cs" />
-    <Compile Include="Hikipuro\Text\Parser\EBNF\Generator\GeneratorTokenType.cs" />
-    <Compile Include="Hikipuro\Text\Parser\EBNF\Generator\Expressions\GeneratorExpression.cs" />
-    <Compile Include="Hikipuro\Text\Parser\EBNF\Generator\Expressions\GeneratorFieldExpression.cs" />
-    <Compile Include="Hikipuro\Text\Parser\EBNF\Generator\Expressions\GeneratorLoopExpression.cs" />
-    <Compile Include="Hikipuro\Text\Parser\EBNF\Generator\Expressions\GeneratorNonterminalExpression.cs" />
-    <Compile Include="Hikipuro\Text\Parser\EBNF\Generator\Expressions\GeneratorOptionExpression.cs" />
-    <Compile Include="Hikipuro\Text\Parser\EBNF\Generator\Expressions\GeneratorOrExpression.cs" />
-    <Compile Include="Hikipuro\Text\Parser\EBNF\Generator\Expressions\GeneratorRootExpression.cs" />
-    <Compile Include="Hikipuro\Text\Parser\EBNF\Generator\Expressions\GeneratorTerminalExpression.cs" />
-    <Compile Include="Hikipuro\Text\Parser\EBNF\Generator\GeneratorExpressionType.cs" />
-    <Compile Include="Hikipuro\Text\Parser\EBNF\Generator\GeneratorTokenMatches.cs" />
+    <Compile Include="Hikipuro\Text\Parser\Generator\GeneratorContext.cs" />
+    <Compile Include="Hikipuro\Text\Parser\Generator\Expressions\GeneratedExpression.cs" />
+    <Compile Include="Hikipuro\Text\Parser\Generator\Expressions\FieldExpression.cs" />
+    <Compile Include="Hikipuro\Text\Parser\Generator\Expressions\LoopExpression.cs" />
+    <Compile Include="Hikipuro\Text\Parser\Generator\Expressions\NonterminalExpression.cs" />
+    <Compile Include="Hikipuro\Text\Parser\Generator\Expressions\OptionExpression.cs" />
+    <Compile Include="Hikipuro\Text\Parser\Generator\Expressions\OrExpression.cs" />
+    <Compile Include="Hikipuro\Text\Parser\Generator\Expressions\RootExpression.cs" />
+    <Compile Include="Hikipuro\Text\Parser\Generator\Expressions\TerminalExpression.cs" />
+    <Compile Include="Hikipuro\Text\Parser\Generator\TokenMatches.cs" />
     <Compile Include="Hikipuro\Text\Parser\EBNF\EBNFContext.cs" />
     <Compile Include="Hikipuro\Text\Parser\EBNF\EBNFParser.cs" />
     <Compile Include="Hikipuro\Text\Parser\EBNF\Expressions\BaseExpression.cs" />
@@ -76,7 +77,7 @@
     <Compile Include="Hikipuro\Text\Parser\EBNF\Expressions\OrExpression.cs" />
     <Compile Include="Hikipuro\Text\Parser\EBNF\Expressions\RightExpression.cs" />
     <Compile Include="Hikipuro\Text\Parser\EBNF\Expressions\StringExpression.cs" />
-    <Compile Include="Hikipuro\Text\Parser\EBNF\GeneratedParser.cs" />
+    <Compile Include="Hikipuro\Text\Parser\Generator\GeneratedParser.cs" />
     <Compile Include="Hikipuro\Text\Tokenizer\BeforeAddTokenEventArgs.cs" />
     <Compile Include="Hikipuro\Text\Tokenizer\BeforeAddTokenEventHandler.cs" />
     <Compile Include="Hikipuro\Text\Tokenizer\ParseException.cs" />

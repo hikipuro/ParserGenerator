@@ -1,10 +1,8 @@
-﻿using System.Diagnostics;
-
-namespace Hikipuro.Text.Parser.EBNF.Generator {
+﻿namespace Hikipuro.Text.Parser.Generator.Expressions {
 	/// <summary>
 	/// Option の処理用.
 	/// </summary>
-	class GeneratorOptionExpression : GeneratorExpression {
+	class OptionExpression : GeneratedExpression {
 		/// <summary>
 		/// 評価用メソッド.
 		/// </summary>
@@ -12,10 +10,10 @@ namespace Hikipuro.Text.Parser.EBNF.Generator {
 		public override void Interpret(GeneratorContext context) {
 			DebugLog("OptionExpression.Interpret(): " + Name);
 
-			Matches = new GeneratorTokenMatches(Name);
+			Matches = new TokenMatches(Name);
 			IsMatch = false;
 
-			foreach (GeneratorExpression exp in Expressions) {
+			foreach (GeneratedExpression exp in Expressions) {
 				exp.Interpret(context);
 				if (exp.IsMatch) {
 					IsMatch = true;

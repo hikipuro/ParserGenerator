@@ -1,5 +1,6 @@
 ﻿using Hikipuro.Text.Interpreter;
-using Hikipuro.Text.Parser.EBNF.Generator;
+using Hikipuro.Text.Parser.Generator;
+using Hikipuro.Text.Parser.Generator.Expressions;
 using Hikipuro.Text.Tokenizer;
 using System.Collections;
 using System.Collections.Generic;
@@ -13,25 +14,25 @@ namespace Hikipuro.Text.Parser.EBNF {
 		/// <summary>
 		/// 生成された Tokenizer.
 		/// </summary>
-		public Tokenizer<GeneratorTokenType> Tokenizer;
+		public Tokenizer<GeneratedParser.TokenType> Tokenizer;
 
 		/// <summary>
 		/// 生成されたパーサのルート.
 		/// </summary>
-		public GeneratorRootExpression Root;
+		public GeneratedExpression Root;
 
 		/// <summary>
 		/// 生成された Expression のリスト.
 		/// </summary>
-		public Dictionary<string, GeneratorExpression> Fields;
+		public Dictionary<string, GeneratedExpression> Fields;
 
 		/// <summary>
 		/// コンストラクタ.
 		/// </summary>
 		/// <param name="source"></param>
 		public EBNFContext(IEnumerator source) : base(source) {
-			Tokenizer = new Tokenizer<GeneratorTokenType>();
-			Fields = new Dictionary<string, GeneratorExpression>();
+			Tokenizer = new Tokenizer<GeneratedParser.TokenType>();
+			Fields = new Dictionary<string, GeneratedExpression>();
 		}
 
 		/// <summary>
@@ -40,7 +41,7 @@ namespace Hikipuro.Text.Parser.EBNF {
 		/// <param name="name">パターンの名前.</param>
 		/// <param name="patternText">正規表現のパターン.</param>
 		public void AddTokenizerPattern(string name, string patternText) {
-			Tokenizer.AddPattern(new GeneratorTokenType(name), patternText);
+			Tokenizer.AddPattern(new GeneratedParser.TokenType(name), patternText);
 		}
 	}
 }

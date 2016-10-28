@@ -1,17 +1,19 @@
 ﻿using Hikipuro.Text.Interpreter;
+using Hikipuro.Text.Parser.Generator.Expressions;
 using Hikipuro.Text.Tokenizer;
 using System.Collections;
 using System.Collections.Generic;
+using TokenType = Hikipuro.Text.Parser.Generator.GeneratedParser.TokenType;
 
-namespace Hikipuro.Text.Parser.EBNF.Generator {
+namespace Hikipuro.Text.Parser.Generator {
 	/// <summary>
 	/// ジェネレータで使用するコンテキスト.
 	/// </summary>
-	public class GeneratorContext : Context<Token<GeneratorTokenType>> {
-		public delegate void MatchFieldEventHandler(object sender, GeneratorTokenMatches matches);
+	public class GeneratorContext : Context<Token<TokenType>> {
+		public delegate void MatchFieldEventHandler(object sender, TokenMatches matches);
 
 		public event MatchFieldEventHandler MatchField;
-		public Dictionary<string, GeneratorExpression> Fields;
+		public Dictionary<string, GeneratedExpression> Fields;
 
 
 		/// <summary>
@@ -19,10 +21,10 @@ namespace Hikipuro.Text.Parser.EBNF.Generator {
 		/// </summary>
 		/// <param name="source"></param>
 		public GeneratorContext(IEnumerator source) : base(source) {
-			Fields = new Dictionary<string, GeneratorExpression>();
+			Fields = new Dictionary<string, GeneratedExpression>();
 		}
 
-		public void OnMatchField(string name, GeneratorTokenMatches matches) {
+		public void OnMatchField(string name, TokenMatches matches) {
 			if (MatchField == null) {
 				return;
 			}

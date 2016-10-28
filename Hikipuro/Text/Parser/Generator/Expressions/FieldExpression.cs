@@ -1,10 +1,10 @@
-﻿using System.Diagnostics;
+﻿using ExpressionType = Hikipuro.Text.Parser.Generator.GeneratedParser.ExpressionType;
 
-namespace Hikipuro.Text.Parser.EBNF.Generator {
+namespace Hikipuro.Text.Parser.Generator.Expressions {
 	/// <summary>
 	/// フィールド.
 	/// </summary>
-	class GeneratorFieldExpression : GeneratorExpression {
+	class FieldExpression : GeneratedExpression {
 		/// <summary>
 		/// 評価用メソッド.
 		/// </summary>
@@ -12,14 +12,14 @@ namespace Hikipuro.Text.Parser.EBNF.Generator {
 		public override void Interpret(GeneratorContext context) {
 			DebugLog("FieldExpression.Interpret(): " + Name);
 
-			Matches = new GeneratorTokenMatches(Name);
+			Matches = new TokenMatches(Name);
 			IsMatch = false;
 
-			foreach (GeneratorExpression exp in Expressions) {
+			foreach (GeneratedExpression exp in Expressions) {
 				exp.Interpret(context);
 				Matches.ConcatTokens(exp.Matches);
 				if (exp.IsMatch == false) {
-					if (exp.Type == GeneratorExpressionType.Option) {
+					if (exp.Type == ExpressionType.Option) {
 						continue;
 					}
 					IsMatch = false;

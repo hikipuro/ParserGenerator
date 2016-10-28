@@ -1,5 +1,5 @@
 ﻿using Hikipuro.Text.Parser.EBNF;
-using Hikipuro.Text.Parser.EBNF.Generator;
+using Hikipuro.Text.Parser.Generator;
 using Hikipuro.Text.Tokenizer;
 using System;
 using System.Diagnostics;
@@ -36,14 +36,14 @@ namespace ParserGenerator {
 		/// <param name="matches"></param>
 		/// <param name="depth"></param>
 		/// <returns></returns>
-		private string PrintTokenMatches(GeneratorTokenMatches matches, int depth) {
+		private string PrintTokenMatches(TokenMatches matches, int depth) {
 			StringBuilder stringBuilder = new StringBuilder();
 			string tab = new string('\t', depth + 1);
-			foreach (Token<GeneratorTokenType> token in matches.Tokens) {
+			foreach (Token<GeneratedParser.TokenType> token in matches.Tokens) {
 				Debug.WriteLine("t " + tab + token.Text);
 			}
 			if (matches.Matches.Count > 0) {
-				foreach (GeneratorTokenMatches m in matches.Matches) {
+				foreach (TokenMatches m in matches.Matches) {
 					Debug.WriteLine(string.Format(
 						"m {0}: {1} {2}",
 						tab,
@@ -71,7 +71,7 @@ namespace ParserGenerator {
 			string test = "123132";
 			//string test = "123+223";
 
-			parser.MatchField += (object sender2, GeneratorTokenMatches matches) => {
+			parser.MatchField += (object sender2, TokenMatches matches) => {
 				//return;
 				/*
 				if (matches.Name != "record") {

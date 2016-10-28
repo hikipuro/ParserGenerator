@@ -1,10 +1,8 @@
-﻿using System.Diagnostics;
-
-namespace Hikipuro.Text.Parser.EBNF.Generator {
+﻿namespace Hikipuro.Text.Parser.Generator.Expressions {
 	/// <summary>
 	/// Or の処理用.
 	/// </summary>
-	class GeneratorOrExpression : GeneratorExpression {
+	class OrExpression : GeneratedExpression {
 		/// <summary>
 		/// 評価用メソッド.
 		/// </summary>
@@ -12,10 +10,10 @@ namespace Hikipuro.Text.Parser.EBNF.Generator {
 		public override void Interpret(GeneratorContext context) {
 			DebugLog("OrExpression.Interpret(): " + Name + ", " + Expressions.Count);
 
-			Matches = new GeneratorTokenMatches(Name);
+			Matches = new TokenMatches(Name);
 			IsMatch = false;
 
-			foreach (GeneratorExpression exp in Expressions) {
+			foreach (GeneratedExpression exp in Expressions) {
 				//Console.WriteLine("*** OrExpression.Interpret(): " + exp.Name);
 				exp.Interpret(context);
 				//Console.WriteLine("*** OrExpression.Interpret(): " + exp.IsMatch);

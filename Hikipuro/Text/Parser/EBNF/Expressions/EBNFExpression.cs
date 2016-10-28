@@ -1,4 +1,5 @@
-﻿using Hikipuro.Text.Parser.EBNF.Generator;
+﻿using Hikipuro.Text.Parser.Generator;
+using Hikipuro.Text.Parser.Generator.Expressions;
 
 namespace Hikipuro.Text.Parser.EBNF.Expressions {
 	/// <summary>
@@ -13,9 +14,7 @@ namespace Hikipuro.Text.Parser.EBNF.Expressions {
 			DebugLog(": EBNFExpression.Interpret()");
 
 			// 戻り値の準備
-			GeneratorRootExpression root = new GeneratorRootExpression();
-			root.Type = GeneratorExpressionType.Root;
-			root.Name = "Root";
+			GeneratedExpression root = ExpressionFactory.CreateRoot();
 
 			// フィールドの繰り返し
 			while (context.Current != null) {
@@ -23,15 +22,15 @@ namespace Hikipuro.Text.Parser.EBNF.Expressions {
 				exp.Interpret(context);
 
 				// 名前が付いていない場合はエラー
-				if (exp.Generator.Name == string.Empty) {
+				if (exp.GeneratedExpression.Name == string.Empty) {
 					ThrowParseException(
 						ErrorMessages.NameNotFound, context.Current
 					);
 				}
 
 				// リストに追加する
-				root.AddExpression(exp.Generator);
-				context.Fields.Add(exp.Generator.Name, exp.Generator);
+				root.AddExpression(exp.GeneratedExpression);
+				context.Fields.Add(exp.GeneratedExpression.Name, exp.GeneratedExpression);
 			}
 
 			// 終端に文字が残っている場合

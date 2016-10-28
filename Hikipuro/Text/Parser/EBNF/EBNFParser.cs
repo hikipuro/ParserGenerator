@@ -1,4 +1,5 @@
 ﻿using Hikipuro.Text.Parser.EBNF.Expressions;
+using Hikipuro.Text.Parser.Generator;
 using Hikipuro.Text.Tokenizer;
 using System.Diagnostics;
 
@@ -47,7 +48,11 @@ namespace Hikipuro.Text.Parser.EBNF {
 			exp.Interpret(context);
 
 			// 生成されたパーサを返す
-			GeneratedParser parser = new GeneratedParser(context);
+			GeneratedParser parser = new GeneratedParser(
+				context.Tokenizer,
+				context.Fields,
+				context.Root
+			);
 			return parser;
 		}
 

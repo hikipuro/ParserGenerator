@@ -1,21 +1,21 @@
 ﻿using Hikipuro.Text.Tokenizer;
-using System.Diagnostics;
+using TokenType = Hikipuro.Text.Parser.Generator.GeneratedParser.TokenType;
 
-namespace Hikipuro.Text.Parser.EBNF.Generator {
+namespace Hikipuro.Text.Parser.Generator.Expressions {
 	/// <summary>
 	/// 終端記号.
 	/// </summary>
-	class GeneratorTerminalExpression : GeneratorExpression {
+	class TerminalExpression : GeneratedExpression {
 		/// <summary>
 		/// 評価用メソッド.
 		/// </summary>
 		/// <param name="context">コンテキストオブジェクト.</param>
 		public override void Interpret(GeneratorContext context) {
-			Matches = new GeneratorTokenMatches(Name);
+			Matches = new TokenMatches(Name);
 			//Matches.Clear();
 			IsMatch = false;
 
-			Token<GeneratorTokenType> token = context.Current;
+			Token<TokenType> token = context.Current;
 			IsMatch = token.Type.Name == Name;
 			if (IsMatch) {
 				Matches.AddToken(token);

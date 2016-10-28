@@ -1,4 +1,5 @@
-﻿using Hikipuro.Text.Parser.EBNF.Generator;
+﻿using Hikipuro.Text.Parser.Generator;
+using Hikipuro.Text.Parser.Generator.Expressions;
 using Hikipuro.Text.Tokenizer;
 using TokenType = Hikipuro.Text.Parser.EBNF.EBNFParser.TokenType;
 
@@ -15,12 +16,16 @@ namespace Hikipuro.Text.Parser.EBNF.Expressions {
 			DebugLog(": OptionExpression.Interpret()");
 
 			// 戻り値の準備
-			Generator = GeneratorExpression.CreateOption();
+			GeneratedExpression = ExpressionFactory.CreateOption();
 
 			// 最初のトークンをチェック
 			Token<TokenType> token = context.Current;
 			CheckTokenExists(token);
 			CheckFirstToken(token);
+
+			// 2 番目のトークンをチェック
+			token = context.Next();
+			CheckTokenExists(token);
 
 			bool loop = true;
 			while (loop) {
@@ -31,7 +36,7 @@ namespace Hikipuro.Text.Parser.EBNF.Expressions {
 				case TokenType.Name:
 					Token<TokenType> nextToken = token.Next;
 					if (nextToken != null && nextToken.Type == TokenType.Or) {
-						ParseOr(context);
+						GeneratedExpression exp = ParseOr(context);
 						token = context.Current;
 						CheckTokenExists(token);
 					}
@@ -43,9 +48,6 @@ namespace Hikipuro.Text.Parser.EBNF.Expressions {
 				}
 
 				switch (token.Type) {
-				case TokenType.OpenBracket:
-					token = context.Next();
-					break;
 				case TokenType.CloseBracket:
 					loop = false;
 					token = context.Next();

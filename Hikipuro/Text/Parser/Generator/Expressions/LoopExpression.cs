@@ -1,11 +1,12 @@
 ﻿using Hikipuro.Text.Interpreter;
 using Hikipuro.Text.Tokenizer;
+using TokenType = Hikipuro.Text.Parser.Generator.GeneratedParser.TokenType;
 
-namespace Hikipuro.Text.Parser.EBNF.Generator {
+namespace Hikipuro.Text.Parser.Generator.Expressions {
 	/// <summary>
 	/// ループの処理用.
 	/// </summary>
-	class GeneratorLoopExpression : GeneratorExpression {
+	class LoopExpression : GeneratedExpression {
 		/// <summary>
 		/// 評価用メソッド.
 		/// </summary>
@@ -13,14 +14,14 @@ namespace Hikipuro.Text.Parser.EBNF.Generator {
 		public override void Interpret(GeneratorContext context) {
 			DebugLog("LoopExpression.Interpret(): " + Name + ", " + Expressions.Count);
 
-			Matches = new GeneratorTokenMatches(Name);
+			Matches = new TokenMatches(Name);
 			IsMatch = false;
 
 			bool loop = true;
 			while (loop) {
 				int count = 0;
-				GeneratorExpression exp2 = null;
-				foreach (GeneratorExpression exp in Expressions) {
+				GeneratedExpression exp2 = null;
+				foreach (GeneratedExpression exp in Expressions) {
 					exp2 = exp;
 					DebugLog("LoopExpression.Expressions : (" + exp.Name + ")");
 					exp.Interpret(context);
@@ -40,7 +41,7 @@ namespace Hikipuro.Text.Parser.EBNF.Generator {
 					throw new InterpreterException("LoopExpression.Interpret() Error");
 				}
 
-				Token<GeneratorTokenType> token = context.Current;
+				Token<TokenType> token = context.Current;
 				if (token != null) {
 					//Console.WriteLine("*** Test: " + token.Next.Type.Name);
 				}

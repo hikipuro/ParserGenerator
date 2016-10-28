@@ -1,5 +1,6 @@
 ﻿using Hikipuro.Text.Interpreter;
-using Hikipuro.Text.Parser.EBNF.Generator;
+using Hikipuro.Text.Parser.Generator;
+using Hikipuro.Text.Parser.Generator.Expressions;
 using Hikipuro.Text.Tokenizer;
 using System.Diagnostics;
 using TokenType = Hikipuro.Text.Parser.EBNF.EBNFParser.TokenType;
@@ -18,7 +19,7 @@ namespace Hikipuro.Text.Parser.EBNF.Expressions {
 		/// <summary>
 		/// 戻り値として使用する, 生成された Expression.
 		/// </summary>
-		public GeneratorExpression Generator;
+		public GeneratedExpression GeneratedExpression;
 
 		/// <summary>
 		/// 評価用メソッド.
@@ -114,7 +115,7 @@ namespace Hikipuro.Text.Parser.EBNF.Expressions {
 		public void ParseTerminal(EBNFContext context) {
 			StringExpression exp = new StringExpression();
 			exp.Interpret(context);
-			Generator.AddExpression(exp.Generator);
+			GeneratedExpression.AddExpression(exp.GeneratedExpression);
 		}
 
 		/// <summary>
@@ -123,18 +124,20 @@ namespace Hikipuro.Text.Parser.EBNF.Expressions {
 		/// <param name="context"></param>
 		/// <param name="name"></param>
 		public void ParseNonterminal(EBNFContext context, string name) {
-			GeneratorExpression exp = GeneratorExpression.CreateNonterminal(name);
-			Generator.AddExpression(exp);
+			GeneratedExpression exp = ExpressionFactory.CreateNonterminal(name);
+			GeneratedExpression.AddExpression(exp);
 		}
 
 		/// <summary>
 		/// OrExpression の処理を実行する.
 		/// </summary>
 		/// <param name="context"></param>
-		public void ParseOr(EBNFContext context) {
+		/// <returns></returns>
+		public GeneratedExpression ParseOr(EBNFContext context) {
 			OrExpression exp = new OrExpression();
 			exp.Interpret(context);
-			Generator.AddExpression(exp.Generator);
+			GeneratedExpression.AddExpression(exp.GeneratedExpression);
+			return exp.GeneratedExpression;
 		}
 
 		/// <summary>
@@ -144,17 +147,19 @@ namespace Hikipuro.Text.Parser.EBNF.Expressions {
 		public void ParseGroup(EBNFContext context) {
 			GroupExpression exp = new GroupExpression();
 			exp.Interpret(context);
-			Generator.AddExpression(exp.Generator);
+			GeneratedExpression.AddExpression(exp.GeneratedExpression);
 		}
 
 		/// <summary>
 		/// LoopExpression の処理を実行する.
 		/// </summary>
 		/// <param name="context"></param>
-		public void ParseLoop(EBNFContext context) {
+		/// <returns></returns>
+		public GeneratedExpression ParseLoop(EBNFContext context) {
 			LoopExpression exp = new LoopExpression();
 			exp.Interpret(context);
-			Generator.AddExpression(exp.Generator);
+			GeneratedExpression.AddExpression(exp.GeneratedExpression);
+			return exp.GeneratedExpression;
 		}
 
 		/// <summary>
@@ -164,7 +169,17 @@ namespace Hikipuro.Text.Parser.EBNF.Expressions {
 		public void ParseOption(EBNFContext context) {
 			OptionExpression exp = new OptionExpression();
 			exp.Interpret(context);
-			Generator.AddExpression(exp.Generator);
+			GeneratedExpression.AddExpression(exp.GeneratedExpression);
+		}
+
+		/// <summary>
+		/// ExceptionExpression の処理を実行する.
+		/// </summary>
+		/// <param name="context"></param>
+		public void ParseException(EBNFContext context) {
+			ExceptionExpression exp = new ExceptionExpression();
+			exp.Interpret(context);
+			GeneratedExpression.AddExpression(exp.GeneratedExpression);
 		}
 
 		/// <summary>

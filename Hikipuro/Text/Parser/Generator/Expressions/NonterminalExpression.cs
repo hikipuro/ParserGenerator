@@ -1,11 +1,10 @@
 ﻿using Hikipuro.Text.Interpreter;
-using System.Diagnostics;
 
-namespace Hikipuro.Text.Parser.EBNF.Generator {
+namespace Hikipuro.Text.Parser.Generator.Expressions {
 	/// <summary>
 	/// 非終端記号.
 	/// </summary>
-	class GeneratorNonterminalExpression : GeneratorExpression {
+	class NonterminalExpression : GeneratedExpression {
 		/// <summary>
 		/// 評価用メソッド.
 		/// </summary>
@@ -13,14 +12,14 @@ namespace Hikipuro.Text.Parser.EBNF.Generator {
 		public override void Interpret(GeneratorContext context) {
 			DebugLog("NonterminalExpression.Interpret(): " + Name);
 
-			Matches = new GeneratorTokenMatches(Name);
+			Matches = new TokenMatches(Name);
 			IsMatch = false;
 
 			if (context.Fields.ContainsKey(Name) == false) {
 				throw new InterpreterException("NonterminalExpression.Interpret() Error");
 			}
 
-			GeneratorExpression exp = context.Fields[Name];
+			GeneratedExpression exp = context.Fields[Name];
 			exp.Interpret(context);
 			IsMatch = exp.IsMatch;
 			Matches.ConcatTokens(exp.Matches);

@@ -1,4 +1,5 @@
-﻿using Hikipuro.Text.Parser.EBNF.Generator;
+﻿using Hikipuro.Text.Parser.Generator;
+using Hikipuro.Text.Parser.Generator.Expressions;
 using Hikipuro.Text.Tokenizer;
 using TokenType = Hikipuro.Text.Parser.EBNF.EBNFParser.TokenType;
 
@@ -16,23 +17,30 @@ namespace Hikipuro.Text.Parser.EBNF.Expressions {
 
 			// 戻り値の準備
 			string pattern = string.Empty;
-			Generator = GeneratorExpression.CreateGroup();
+			GeneratedExpression = ExpressionFactory.CreateGroup();
 
 			// 最初のトークンをチェック
 			Token<TokenType> token = context.Current;
 			CheckTokenExists(token);
 			CheckFirstToken(token);
+			pattern += token.Text;
+
+			// 2 番目のトークンをチェック
+			token = context.Next();
+			CheckTokenExists(token);
 
 			bool loop = true;
 			while (loop) {
 				DebugLog(": GroupExpression: (" + token.Type + ")");
+				GeneratedExpression exp;
 
 				switch (token.Type) {
 				case TokenType.String:
 				case TokenType.Name:
 					Token<TokenType> nextToken = token.Next;
 					if (nextToken != null && nextToken.Type == TokenType.Or) {
-						ParseOr(context);
+						exp = ParseOr(context);
+						pattern += exp.Name;
 						token = context.Current;
 						CheckTokenExists(token);
 					}
@@ -44,10 +52,6 @@ namespace Hikipuro.Text.Parser.EBNF.Expressions {
 				}
 
 				switch (token.Type) {
-				case TokenType.OpenParen:
-					pattern += token.Text;
-					token = context.Next();
-					break;
 				case TokenType.CloseParen:
 					pattern += token.Text;
 					loop = false;
@@ -62,6 +66,11 @@ namespace Hikipuro.Text.Parser.EBNF.Expressions {
 					pattern += token.Text;
 					ParseNonterminal(context, token.Text);
 					token = context.Next();
+					break;
+				case TokenType.OpenBrace:
+					exp = ParseLoop(context);
+					pattern += exp.Name;
+					token = context.Current;
 					break;
 				case TokenType.Comma:
 					CheckComma(token);
@@ -80,7 +89,7 @@ namespace Hikipuro.Text.Parser.EBNF.Expressions {
 			}
 
 			// 戻り値
-			Generator.Name = pattern;
+			GeneratedExpression.Name = pattern;
 			DebugLog(": GroupExpression.Pattern: " + pattern);
 		}
 

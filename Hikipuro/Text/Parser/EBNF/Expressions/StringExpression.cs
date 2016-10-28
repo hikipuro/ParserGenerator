@@ -1,4 +1,4 @@
-﻿using Hikipuro.Text.Parser.EBNF.Generator;
+﻿using Hikipuro.Text.Parser.Generator;
 using Hikipuro.Text.Tokenizer;
 using TokenType = Hikipuro.Text.Parser.EBNF.EBNFParser.TokenType;
 
@@ -31,7 +31,7 @@ namespace Hikipuro.Text.Parser.EBNF.Expressions {
 			context.AddTokenizerPattern(pattern, pattern);
 
 			// 戻り値
-			Generator = GeneratorExpression.CreateTerminal(pattern);
+			GeneratedExpression = ExpressionFactory.CreateTerminal(pattern);
 		}
 	}
 }
