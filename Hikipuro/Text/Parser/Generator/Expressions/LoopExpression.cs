@@ -1,6 +1,7 @@
-﻿using Hikipuro.Text.Interpreter;
-using Hikipuro.Text.Tokenizer;
+﻿using Hikipuro.Text.Tokenizer;
 using TokenType = Hikipuro.Text.Parser.Generator.GeneratedParser.TokenType;
+using ExpressionType = Hikipuro.Text.Parser.Generator.GeneratedParser.ExpressionType;
+using Result = Hikipuro.Text.Parser.Generator.GeneratorContext.Result;
 
 namespace Hikipuro.Text.Parser.Generator.Expressions {
 	/// <summary>
@@ -14,8 +15,15 @@ namespace Hikipuro.Text.Parser.Generator.Expressions {
 		public override void Interpret(GeneratorContext context) {
 			DebugLog("LoopExpression.Interpret(): " + Name + ", " + Expressions.Count);
 
-			Matches = new TokenMatches(Name);
-			IsMatch = false;
+			// 戻り値の準備
+			Result result = new Result(Name);
+
+			int maxCount = 0;
+			foreach (GeneratedExpression exp in Expressions) {
+				if (exp.Type != ExpressionType.Option) {
+					maxCount++;
+				}
+			}
 
 			bool loop = true;
 			while (loop) {
@@ -25,11 +33,17 @@ namespace Hikipuro.Text.Parser.Generator.Expressions {
 					exp2 = exp;
 					DebugLog("LoopExpression.Expressions : (" + exp.Name + ")");
 					exp.Interpret(context);
-					IsMatch = exp.IsMatch;
-					if (exp.IsMatch == false) {
+					Result itemResult = context.PopResult();
+
+					result.IsMatch = itemResult.IsMatch;
+					if (itemResult.IsMatch == false) {
+						if (exp.Type == ExpressionType.Option) {
+							continue;
+						}
+						DebugLog("-\texp.IsMatch == false : (" + exp.Name + ")");
 						break;
 					}
-					Matches.ConcatTokens(exp.Matches);
+					result.Matches.ConcatTokens(itemResult.Matches);
 					//Matches.ConcatTokens(exp.Matches);
 					count++;
 				}
@@ -37,20 +51,23 @@ namespace Hikipuro.Text.Parser.Generator.Expressions {
 					//Console.WriteLine("LoopExpression: count == 0: " + exp2.Type + ", " + exp2.Name);
 					break;
 				}
-				if (count != Expressions.Count) {
-					throw new InterpreterException("LoopExpression.Interpret() Error");
+				if (count == maxCount) {
+
+				}
+				if (count != maxCount) {
+					ThrowParseException(
+						ErrorMessages.UnexpectedToken, context.Current
+					);
 				}
 
 				Token<TokenType> token = context.Current;
-				if (token != null) {
-					//Console.WriteLine("*** Test: " + token.Next.Type.Name);
-				}
 				if (token == null) {
 					loop = false;
 					break;
 				}
 			}
 
+			context.PushResult(result);
 			//Matches = matches;
 		}
 	}

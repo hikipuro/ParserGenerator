@@ -17,11 +17,6 @@ namespace Hikipuro.Text.Parser.EBNF.Expressions {
 		public bool DebugFlag = true;
 
 		/// <summary>
-		/// 戻り値として使用する, 生成された Expression.
-		/// </summary>
-		public GeneratedExpression GeneratedExpression;
-
-		/// <summary>
 		/// 評価用メソッド.
 		/// </summary>
 		/// <param name="context">コンテキストオブジェクト.</param>
@@ -112,10 +107,11 @@ namespace Hikipuro.Text.Parser.EBNF.Expressions {
 		/// StringExpression の処理を実行する.
 		/// </summary>
 		/// <param name="context"></param>
-		public void ParseTerminal(EBNFContext context) {
+		/// <returns></returns>
+		public GeneratedExpression ParseTerminal(EBNFContext context) {
 			StringExpression exp = new StringExpression();
 			exp.Interpret(context);
-			GeneratedExpression.AddExpression(exp.GeneratedExpression);
+			return context.PopExpression();
 		}
 
 		/// <summary>
@@ -123,9 +119,20 @@ namespace Hikipuro.Text.Parser.EBNF.Expressions {
 		/// </summary>
 		/// <param name="context"></param>
 		/// <param name="name"></param>
-		public void ParseNonterminal(EBNFContext context, string name) {
-			GeneratedExpression exp = ExpressionFactory.CreateNonterminal(name);
-			GeneratedExpression.AddExpression(exp);
+		public GeneratedExpression ParseNonterminal(EBNFContext context, string name) {
+			return ExpressionFactory.CreateNonterminal(name);
+		}
+
+		public GeneratedExpression ParseField(EBNFContext context) {
+			FieldExpression exp = new FieldExpression();
+			exp.Interpret(context);
+			return context.PopExpression();
+		}
+
+		public GeneratedExpression ParseRight(EBNFContext context) {
+			RightExpression exp = new RightExpression();
+			exp.Interpret(context);
+			return context.PopExpression();
 		}
 
 		/// <summary>
@@ -136,18 +143,17 @@ namespace Hikipuro.Text.Parser.EBNF.Expressions {
 		public GeneratedExpression ParseOr(EBNFContext context) {
 			OrExpression exp = new OrExpression();
 			exp.Interpret(context);
-			GeneratedExpression.AddExpression(exp.GeneratedExpression);
-			return exp.GeneratedExpression;
+			return context.PopExpression();
 		}
 
 		/// <summary>
 		/// GroupExpression の処理を実行する.
 		/// </summary>
 		/// <param name="context"></param>
-		public void ParseGroup(EBNFContext context) {
+		public GeneratedExpression ParseGroup(EBNFContext context) {
 			GroupExpression exp = new GroupExpression();
 			exp.Interpret(context);
-			GeneratedExpression.AddExpression(exp.GeneratedExpression);
+			return context.PopExpression();
 		}
 
 		/// <summary>
@@ -158,28 +164,27 @@ namespace Hikipuro.Text.Parser.EBNF.Expressions {
 		public GeneratedExpression ParseLoop(EBNFContext context) {
 			LoopExpression exp = new LoopExpression();
 			exp.Interpret(context);
-			GeneratedExpression.AddExpression(exp.GeneratedExpression);
-			return exp.GeneratedExpression;
+			return context.PopExpression();
 		}
 
 		/// <summary>
 		/// OptionExpression の処理を実行する.
 		/// </summary>
 		/// <param name="context"></param>
-		public void ParseOption(EBNFContext context) {
+		public GeneratedExpression ParseOption(EBNFContext context) {
 			OptionExpression exp = new OptionExpression();
 			exp.Interpret(context);
-			GeneratedExpression.AddExpression(exp.GeneratedExpression);
+			return context.PopExpression();
 		}
 
 		/// <summary>
 		/// ExceptionExpression の処理を実行する.
 		/// </summary>
 		/// <param name="context"></param>
-		public void ParseException(EBNFContext context) {
+		public GeneratedExpression ParseException(EBNFContext context) {
 			ExceptionExpression exp = new ExceptionExpression();
 			exp.Interpret(context);
-			GeneratedExpression.AddExpression(exp.GeneratedExpression);
+			return context.PopExpression();
 		}
 
 		/// <summary>

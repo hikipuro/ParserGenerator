@@ -27,12 +27,19 @@ namespace Hikipuro.Text.Parser.EBNF {
 		public Dictionary<string, GeneratedExpression> Fields;
 
 		/// <summary>
+		/// 生成された Expression のスタック.
+		/// それぞれの EBNFExpression の戻り値として使用する.
+		/// </summary>
+		public Stack<GeneratedExpression> ExpressionStack;
+
+		/// <summary>
 		/// コンストラクタ.
 		/// </summary>
 		/// <param name="source"></param>
 		public EBNFContext(IEnumerator source) : base(source) {
 			Tokenizer = new Tokenizer<GeneratedParser.TokenType>();
 			Fields = new Dictionary<string, GeneratedExpression>();
+			ExpressionStack = new Stack<GeneratedExpression>();
 		}
 
 		/// <summary>
@@ -42,6 +49,22 @@ namespace Hikipuro.Text.Parser.EBNF {
 		/// <param name="patternText">正規表現のパターン.</param>
 		public void AddTokenizerPattern(string name, string patternText) {
 			Tokenizer.AddPattern(new GeneratedParser.TokenType(name), patternText);
+		}
+
+		/// <summary>
+		/// Expression の処理内で戻り値をプッシュする.
+		/// </summary>
+		/// <param name="expression"></param>
+		public void PushExpression(GeneratedExpression expression) {
+			ExpressionStack.Push(expression);
+		}
+
+		/// <summary>
+		/// Expression の処理内で戻り値をポップする.
+		/// </summary>
+		/// <returns></returns>
+		public GeneratedExpression PopExpression() {
+			return ExpressionStack.Pop();
 		}
 	}
 }

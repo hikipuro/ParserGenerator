@@ -62,14 +62,24 @@ namespace ParserGenerator {
 		/// <param name="e"></param>
 		private void buttonTest_Click(object sender, EventArgs e) {
 			// パーサを生成する
-			string text = LoadText("Sample/EBNF/Test.ebnf");
+			//string text = LoadText("Sample/EBNF/Test.ebnf");
 			//string text = LoadText("Sample/EBNF/Test2.ebnf");
 			//string text = LoadText("Sample/EBNF/Test3.ebnf");
+			string text = LoadText("Sample/EBNF/json.ebnf");
 			GeneratedParser parser = EBNFParser.Parse(text);
 
 			// 生成されたパーサのテスト
 			string test = "123132";
 			//string test = "123+223";
+			test = LoadText("Sample/JSON/Test1.json");
+
+			parser.MatchToken += (object sender2, BeforeAddTokenEventArgs<GeneratedParser.TokenType> e2) => {
+				string name = e2.TokenMatch.Type.Name;
+				if (name == "\\s" || name == "\\r\\n|\\r|\\n") {
+					e2.Cancel = true;
+				}
+				Debug.WriteLine("+++ e2.TokenMatch.Type.Name: " + e2.TokenMatch.Type.Name);
+			};
 
 			parser.MatchField += (object sender2, TokenMatches matches) => {
 				//return;

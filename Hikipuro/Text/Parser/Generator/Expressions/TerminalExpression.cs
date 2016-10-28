@@ -1,5 +1,6 @@
 ﻿using Hikipuro.Text.Tokenizer;
 using TokenType = Hikipuro.Text.Parser.Generator.GeneratedParser.TokenType;
+using Result = Hikipuro.Text.Parser.Generator.GeneratorContext.Result;
 
 namespace Hikipuro.Text.Parser.Generator.Expressions {
 	/// <summary>
@@ -11,24 +12,29 @@ namespace Hikipuro.Text.Parser.Generator.Expressions {
 		/// </summary>
 		/// <param name="context">コンテキストオブジェクト.</param>
 		public override void Interpret(GeneratorContext context) {
-			Matches = new TokenMatches(Name);
-			//Matches.Clear();
-			IsMatch = false;
+			// 戻り値の準備
+			Result result = new Result(Name);
 
 			Token<TokenType> token = context.Current;
-			IsMatch = token.Type.Name == Name;
-			if (IsMatch) {
-				Matches.AddToken(token);
+			if (token == null) {
+				context.PushResult(result);
+				return;
+			}
+
+			result.IsMatch = token.Type.Name == Name;
+			if (result.IsMatch) {
+				result.Matches.AddToken(token);
 				context.Next();
 			}
 			DebugLog(string.Format(
 				"TerminalExpression.Interpret(): {0} = {1}, {2}",
 				token.Type.Name,
 				Name,
-				IsMatch
+				result.IsMatch
 			));
 
-			//Matches = matches;
+			// 戻り値
+			context.PushResult(result);
 		}
 	}
 }

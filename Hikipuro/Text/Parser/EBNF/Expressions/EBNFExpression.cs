@@ -18,19 +18,18 @@ namespace Hikipuro.Text.Parser.EBNF.Expressions {
 
 			// フィールドの繰り返し
 			while (context.Current != null) {
-				FieldExpression exp = new FieldExpression();
-				exp.Interpret(context);
+				GeneratedExpression exp = ParseField(context);
 
 				// 名前が付いていない場合はエラー
-				if (exp.GeneratedExpression.Name == string.Empty) {
+				if (exp.Name == string.Empty) {
 					ThrowParseException(
 						ErrorMessages.NameNotFound, context.Current
 					);
 				}
 
 				// リストに追加する
-				root.AddExpression(exp.GeneratedExpression);
-				context.Fields.Add(exp.GeneratedExpression.Name, exp.GeneratedExpression);
+				root.AddExpression(exp);
+				context.Fields.Add(exp.Name, exp);
 			}
 
 			// 終端に文字が残っている場合

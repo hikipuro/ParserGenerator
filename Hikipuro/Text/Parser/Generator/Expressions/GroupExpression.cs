@@ -1,4 +1,5 @@
 ﻿using ExpressionType = Hikipuro.Text.Parser.Generator.GeneratedParser.ExpressionType;
+using Result = Hikipuro.Text.Parser.Generator.GeneratorContext.Result;
 
 namespace Hikipuro.Text.Parser.Generator.Expressions {
 	/// <summary>
@@ -12,27 +13,29 @@ namespace Hikipuro.Text.Parser.Generator.Expressions {
 		public override void Interpret(GeneratorContext context) {
 			DebugLog("GroupExpression.Interpret(): " + Name + ", " + Expressions.Count);
 
-			Matches = new TokenMatches(Name);
-			IsMatch = false;
+			// 戻り値の準備
+			Result result = new Result(Name);
+			//Matches = new TokenMatches(Name);
+			//IsMatch = false;
 
 			foreach (GeneratedExpression exp in Expressions) {
 				exp.Interpret(context);
-				Matches.ConcatTokens(exp.Matches);
-				if (exp.IsMatch == false) {
+				Result itemResult = context.PopResult();
+
+				result.Matches.ConcatTokens(itemResult.Matches);
+				if (itemResult.IsMatch == false) {
 					if (exp.Type == ExpressionType.Option) {
 						continue;
 					}
-					IsMatch = false;
+					result.IsMatch = false;
 					//throw new InterpreterException("FieldExpression.Interpret() Error");
 					break;
 				} else {
-					IsMatch = true;
+					result.IsMatch = true;
 				}
 			}
 
-			if (IsMatch) {
-				context.OnMatchField(Name, Matches);
-			}
+			context.PushResult(result);
 		}
 	}
 }

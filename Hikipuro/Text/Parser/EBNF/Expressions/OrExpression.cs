@@ -1,5 +1,7 @@
 ﻿using Hikipuro.Text.Parser.Generator;
+using Hikipuro.Text.Parser.Generator.Expressions;
 using Hikipuro.Text.Tokenizer;
+using System.Text;
 using TokenType = Hikipuro.Text.Parser.EBNF.EBNFParser.TokenType;
 
 namespace Hikipuro.Text.Parser.EBNF.Expressions {
@@ -15,8 +17,8 @@ namespace Hikipuro.Text.Parser.EBNF.Expressions {
 			DebugLog(": OrExpression.Interpret()");
 
 			// 戻り値の準備
-			string pattern = string.Empty;
-			GeneratedExpression = ExpressionFactory.CreateOr();
+			StringBuilder pattern = new StringBuilder();
+			GeneratedExpression exp = ExpressionFactory.CreateOr();
 
 			// 最初のトークンをチェック
 			Token<TokenType> token = context.Current;
@@ -29,17 +31,21 @@ namespace Hikipuro.Text.Parser.EBNF.Expressions {
 
 				switch (token.Type) {
 				case TokenType.String:
-					pattern += token.Text;
-					ParseTerminal(context);
+					exp.AddExpression(
+						ParseTerminal(context)
+					);
+					pattern.Append(token.Text);
 					token = context.Next();
 					break;
 				case TokenType.Name:
-					pattern += token.Text;
-					ParseNonterminal(context, token.Text);
+					exp.AddExpression(
+						ParseNonterminal(context, token.Text)
+					);
+					pattern.Append(token.Text);
 					token = context.Next();
 					break;
 				case TokenType.Or:
-					pattern += "|";
+					pattern.Append(token.Text);
 					token = context.Next();
 					break;
 				default:
@@ -55,7 +61,9 @@ namespace Hikipuro.Text.Parser.EBNF.Expressions {
 			}
 
 			// 戻り値
-			GeneratedExpression.Name = pattern;
+			exp.Name = pattern.ToString();
+			context.PushExpression(exp);
+			//GeneratedExpression.Name = pattern;
 			DebugLog(": OrExpression.Pattern: " + pattern);
 		}
 

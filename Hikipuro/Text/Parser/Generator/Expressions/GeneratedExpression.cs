@@ -1,7 +1,9 @@
 ﻿using Hikipuro.Text.Interpreter;
+using Hikipuro.Text.Tokenizer;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
+using TokenType = Hikipuro.Text.Parser.Generator.GeneratedParser.TokenType;
 using ExpressionType = Hikipuro.Text.Parser.Generator.GeneratedParser.ExpressionType;
 
 namespace Hikipuro.Text.Parser.Generator.Expressions {
@@ -31,28 +33,17 @@ namespace Hikipuro.Text.Parser.Generator.Expressions {
 		public List<GeneratedExpression> Expressions;
 
 		/// <summary>
-		/// マッチしたか.
+		/// コンストラクタ.
 		/// </summary>
-		public bool IsMatch = false;
-
-		/// <summary>
-		/// マッチした要素.
-		/// </summary>
-		public TokenMatches Matches;
-
-
+		public GeneratedExpression() {
+			Expressions = new List<GeneratedExpression>();
+		}
+		
 		/// <summary>
 		/// 評価用メソッド.
 		/// </summary>
 		/// <param name="context">コンテキストオブジェクト.</param>
 		public virtual void Interpret(GeneratorContext context) {
-		}
-
-		/// <summary>
-		/// コンストラクタ.
-		/// </summary>
-		public GeneratedExpression() {
-			Expressions = new List<GeneratedExpression>();
 		}
 
 		/// <summary>
@@ -73,6 +64,41 @@ namespace Hikipuro.Text.Parser.Generator.Expressions {
 		/// <param name="exp"></param>
 		public void AddExpression(GeneratedExpression exp) {
 			Expressions.Add(exp);
+		}
+
+		/// <summary>
+		/// トークンの null チェック.
+		/// null の場合は例外を発生させる.
+		/// </summary>
+		/// <param name="token">トークン.</param>
+		public void CheckTokenExists(Token<TokenType> token) {
+			if (token != null) {
+				return;
+			}
+			ThrowParseException(
+				ErrorMessages.TokenNotFound, token
+			);
+		}
+
+		/// <summary>
+		/// パースエラーを発生させる.
+		/// </summary>
+		/// <param name="message">メッセージ.</param>
+		/// <param name="token">エラー発生箇所のトークン.</param>
+		public void ThrowParseException(string message, Token<TokenType> token = null) {
+			if (token == null) {
+				throw new InterpreterException(string.Format(
+					"{0}",
+					message
+				));
+			}
+			throw new InterpreterException(string.Format(
+				"{0} (Line: {1}, Index: {2}) {3}",
+				message,
+				token.LineNumber,
+				token.LineIndex,
+				token.Text
+			));
 		}
 
 		/// <summary>

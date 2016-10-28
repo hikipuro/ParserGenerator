@@ -1,6 +1,7 @@
 ﻿using Hikipuro.Text.Parser.Generator;
 using Hikipuro.Text.Parser.Generator.Expressions;
 using Hikipuro.Text.Tokenizer;
+using System.Text;
 using TokenType = Hikipuro.Text.Parser.EBNF.EBNFParser.TokenType;
 
 namespace Hikipuro.Text.Parser.EBNF.Expressions {
@@ -16,14 +17,14 @@ namespace Hikipuro.Text.Parser.EBNF.Expressions {
 			DebugLog(": LoopExpression.Interpret()");
 
 			// 戻り値の準備
-			string pattern = string.Empty;
-			GeneratedExpression = ExpressionFactory.CreateLoop();
+			StringBuilder pattern = new StringBuilder();
+			GeneratedExpression exp = ExpressionFactory.CreateLoop();
 
 			// 最初のトークンをチェック
 			Token<TokenType> token = context.Current;
 			CheckTokenExists(token);
 			CheckFirstToken(token);
-			pattern += token.Text;
+			pattern.Append(token.Text);
 
 			// 2 番目のトークンをチェック
 			token = context.Next();
@@ -38,8 +39,9 @@ namespace Hikipuro.Text.Parser.EBNF.Expressions {
 				case TokenType.Name:
 					Token<TokenType> nextToken = token.Next;
 					if (nextToken != null && nextToken.Type == TokenType.Or) {
-						GeneratedExpression exp = ParseOr(context);
-						pattern += exp.Name;
+						GeneratedExpression orExp = ParseOr(context);
+						exp.AddExpression(orExp);
+						pattern.Append(orExp.Name);
 						token = context.Current;
 						CheckTokenExists(token);
 					}
@@ -52,27 +54,40 @@ namespace Hikipuro.Text.Parser.EBNF.Expressions {
 
 				switch (token.Type) {
 				case TokenType.CloseBrace:
-					pattern += token.Text;
 					loop = false;
+					pattern.Append(token.Text);
 					token = context.Next();
 					break;
 				case TokenType.String:
-					pattern += token.Text;
-					ParseTerminal(context);
+					exp.AddExpression(
+						ParseTerminal(context)
+					);
+					pattern.Append(token.Text);
 					token = context.Next();
 					break;
 				case TokenType.Name:
-					pattern += token.Text;
-					ParseNonterminal(context, token.Text);
+					exp.AddExpression(
+						ParseNonterminal(context, token.Text)
+					);
+					pattern.Append(token.Text);
 					token = context.Next();
+					break;
+				case TokenType.OpenBracket:
+					GeneratedExpression optionExp = ParseOption(context);
+					exp.AddExpression(optionExp);
+					pattern.Append(optionExp.Name);
+					token = context.Current;
 					break;
 				case TokenType.Comma:
 					CheckComma(token);
+					pattern.Append(token.Text);
 					token = context.Next();
 					break;
 				case TokenType.Minus:
-					pattern += token.Text;
-					ParseException(context);
+					exp.AddExpression(
+						ParseException(context)
+					);
+					pattern.Append(token.Text);
 					token = context.Current;
 					break;
 				default:
@@ -88,7 +103,9 @@ namespace Hikipuro.Text.Parser.EBNF.Expressions {
 			}
 
 			// 戻り値
-			GeneratedExpression.Name = pattern;
+			exp.Name = pattern.ToString();
+			context.PushExpression(exp);
+			//GeneratedExpression.Name = pattern;
 			DebugLog(": LoopExpression.Pattern: " + pattern);
 		}
 

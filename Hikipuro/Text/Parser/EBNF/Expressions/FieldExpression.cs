@@ -1,4 +1,5 @@
 ﻿using Hikipuro.Text.Parser.Generator;
+using Hikipuro.Text.Parser.Generator.Expressions;
 using Hikipuro.Text.Tokenizer;
 using TokenType = Hikipuro.Text.Parser.EBNF.EBNFParser.TokenType;
 
@@ -33,11 +34,8 @@ namespace Hikipuro.Text.Parser.EBNF.Expressions {
 			// 式の右辺
 			token = context.Next();
 			CheckTokenExists(token);
-
-			RightExpression exp = new RightExpression();
-			exp.GeneratedExpression = ExpressionFactory.CreateField();
-			exp.GeneratedExpression.Name = name;
-			exp.Interpret(context);
+			GeneratedExpression exp = ParseRight(context);
+			exp.Name = name;
 
 			// セミコロン
 			token = context.Current;
@@ -49,7 +47,8 @@ namespace Hikipuro.Text.Parser.EBNF.Expressions {
 			//CheckTokenExists(token);
 
 			// 戻り値
-			GeneratedExpression = exp.GeneratedExpression;
+			context.PushExpression(exp);
+			//GeneratedExpression = exp.GeneratedExpression;
 		}
 	}
 }

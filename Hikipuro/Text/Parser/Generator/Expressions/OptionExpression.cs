@@ -1,4 +1,6 @@
-﻿namespace Hikipuro.Text.Parser.Generator.Expressions {
+﻿using Result = Hikipuro.Text.Parser.Generator.GeneratorContext.Result;
+
+namespace Hikipuro.Text.Parser.Generator.Expressions {
 	/// <summary>
 	/// Option の処理用.
 	/// </summary>
@@ -10,22 +12,28 @@
 		public override void Interpret(GeneratorContext context) {
 			DebugLog("OptionExpression.Interpret(): " + Name);
 
-			Matches = new TokenMatches(Name);
-			IsMatch = false;
+			// 戻り値の準備
+			Result result = new Result(Name);
+			//Matches = new TokenMatches(Name);
+			//IsMatch = false;
 
 			foreach (GeneratedExpression exp in Expressions) {
 				exp.Interpret(context);
-				if (exp.IsMatch) {
-					IsMatch = true;
-					Matches.ConcatTokens(exp.Matches);
+				Result itemResult = context.PopResult();
+
+				if (itemResult.IsMatch) {
+					result.IsMatch = true;
+					result.Matches.ConcatTokens(itemResult.Matches);
 					//Matches.ConcatTokens(exp.Matches);
 					//break;
 				} else {
-					Matches.ConcatTokens(exp.Matches);
+					result.Matches.ConcatTokens(itemResult.Matches);
 					//Matches.ConcatTokens(exp.Matches);
 					break;
 				}
 			}
+
+			context.PushResult(result);
 		}
 	}
 }

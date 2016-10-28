@@ -1,4 +1,6 @@
-﻿namespace Hikipuro.Text.Parser.Generator.Expressions {
+﻿using Result = Hikipuro.Text.Parser.Generator.GeneratorContext.Result;
+
+namespace Hikipuro.Text.Parser.Generator.Expressions {
 	/// <summary>
 	/// Or の処理用.
 	/// </summary>
@@ -10,19 +12,25 @@
 		public override void Interpret(GeneratorContext context) {
 			DebugLog("OrExpression.Interpret(): " + Name + ", " + Expressions.Count);
 
-			Matches = new TokenMatches(Name);
-			IsMatch = false;
+			// 戻り値の準備
+			Result result = new Result(Name);
+			//Matches = new TokenMatches(Name);
+			//IsMatch = false;
 
 			foreach (GeneratedExpression exp in Expressions) {
 				//Console.WriteLine("*** OrExpression.Interpret(): " + exp.Name);
 				exp.Interpret(context);
 				//Console.WriteLine("*** OrExpression.Interpret(): " + exp.IsMatch);
-				if (exp.IsMatch) {
-					IsMatch = true;
-					Matches.ConcatTokens(exp.Matches);
+				Result itemResult = context.PopResult();
+
+				if (itemResult.IsMatch) {
+					result.IsMatch = true;
+					result.Matches.ConcatTokens(itemResult.Matches);
 					break;
 				}
 			}
+
+			context.PushResult(result);
 		}
 	}
 }

@@ -41,6 +41,8 @@ namespace Hikipuro.Text.Parser.Generator {
 			Root,
 		}
 
+		public event BeforeAddTokenEventHandler<TokenType> MatchToken;
+
 		/// <summary>
 		/// フィールドにマッチした時に発生させるイベント.
 		/// </summary>
@@ -82,6 +84,8 @@ namespace Hikipuro.Text.Parser.Generator {
 				return;
 			}
 			Debug.WriteLine(expession.ToString());
+
+			tokenizer.BeforeAddToken += MatchToken;
 
 			// トークンに分解する
 			TokenList<TokenType> tokens = tokenizer.Tokenize(text);

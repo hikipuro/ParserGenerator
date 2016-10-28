@@ -1,0 +1,14 @@
+﻿json = (object | array), [space];
+
+bool = 'true' | 'false';
+null = 'null';
+number = '\d+[.]?\d*';
+string = '"((?<=\\)"|[^\r\n"])*"';
+
+value = number | bool | null | string;
+field = string, [space], ':', [space], value | object | array;
+object = '{', [space], field, [space], [{',', [space], field, [space]}] '}';
+array = '\[', [space], object | value, [space], [{',', [space], object | value, [space]}], '\]';
+
+newline = '\r\n|\r|\n';
+space = {newline | '\s'};

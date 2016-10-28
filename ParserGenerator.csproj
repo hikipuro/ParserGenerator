@@ -45,6 +45,7 @@
     <Compile Include="Hikipuro\Text\Parser\EBNF\Expressions\ExceptionExpression.cs" />
     <Compile Include="Hikipuro\Text\Parser\EBNF\Expressions\GroupExpression.cs" />
     <Compile Include="Hikipuro\Text\Parser\Generator\ExpressionFactory.cs" />
+    <Compile Include="Hikipuro\Text\Parser\Generator\Expressions\ErrorMessages.cs" />
     <Compile Include="Hikipuro\Text\Parser\Generator\Expressions\ExceptionExpression.cs" />
     <Compile Include="Hikipuro\Text\Parser\Generator\Expressions\GroupExpression.cs" />
     <Compile Include="Sample\Form1.cs">
@@ -116,6 +117,9 @@
     <None Include="Sample\EBNF\csv.ebnf">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="Sample\EBNF\json.ebnf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="Sample\EBNF\Test.ebnf">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -123,6 +127,15 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="Sample\EBNF\Test3.ebnf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Sample\JSON\Test1.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Sample\JSON\Test2.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Sample\JSON\Test3.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>

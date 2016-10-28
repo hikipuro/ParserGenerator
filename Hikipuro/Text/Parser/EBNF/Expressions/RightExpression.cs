@@ -1,4 +1,6 @@
-﻿using Hikipuro.Text.Tokenizer;
+﻿using Hikipuro.Text.Parser.Generator;
+using Hikipuro.Text.Parser.Generator.Expressions;
+using Hikipuro.Text.Tokenizer;
 using TokenType = Hikipuro.Text.Parser.EBNF.EBNFParser.TokenType;
 
 namespace Hikipuro.Text.Parser.EBNF.Expressions {
@@ -14,6 +16,9 @@ namespace Hikipuro.Text.Parser.EBNF.Expressions {
 		public override void Interpret(EBNFContext context) {
 			DebugLog(": RightExpression.Interpret()");
 
+			// 戻り値の準備
+			GeneratedExpression exp = ExpressionFactory.CreateField();
+
 			// 最初のトークンをチェック
 			Token<TokenType> token = context.Current;
 			CheckTokenExists(token);
@@ -28,36 +33,47 @@ namespace Hikipuro.Text.Parser.EBNF.Expressions {
 				case TokenType.Name:
 					Token<TokenType> nextToken = token.Next;
 					if (nextToken != null && nextToken.Type == TokenType.Or) {
-						ParseOr(context);
+						GeneratedExpression orExp = ParseOr(context);
+						exp.AddExpression(orExp);
 						token = context.Current;
 						CheckTokenExists(token);
 					}
 					break;
 				}
 				if (token.IsLast) {
-					ThrowParseException(ErrorMessages.UnexpectedToken, token);
+					//ThrowParseException(ErrorMessages.UnexpectedToken, token);
 					break;
 				}
 
 				switch (token.Type) {
 				case TokenType.String:
-					ParseTerminal(context);
+					exp.AddExpression(
+						ParseTerminal(context)
+					);
 					token = context.Next();
 					break;
 				case TokenType.Name:
-					ParseNonterminal(context, token.Text);
+					exp.AddExpression(
+						ParseNonterminal(context, token.Text)
+					);
 					token = context.Next();
 					break;
 				case TokenType.OpenParen:
-					ParseGroup(context);
+					exp.AddExpression(
+						ParseGroup(context)
+					);
 					token = context.Current;
 					break;
 				case TokenType.OpenBrace:
-					ParseLoop(context);
+					exp.AddExpression(
+						ParseLoop(context)
+					);
 					token = context.Current;
 					break;
 				case TokenType.OpenBracket:
-					ParseOption(context);
+					exp.AddExpression(
+						ParseOption(context)
+					);
 					token = context.Current;
 					break;
 				case TokenType.Comma:
@@ -77,6 +93,9 @@ namespace Hikipuro.Text.Parser.EBNF.Expressions {
 					break;
 				}
 			}
+
+			// 戻り値
+			context.PushExpression(exp);
 		}
 
 		/// <summary>
